@@ -25,4 +25,13 @@
     <%= user.self_introduction %>
   </p>
 
+  <p>
+    <strong><%= User.human_attribute_name(:avatar) %>:</strong>
+    <% if user.avatar.blank? %>
+      未登録です。
+    <% else %>
+      <%= image_tag user.avatar.variant(resize_to_limit: [200, 200]) %>
+    <% end %>
+  </p>
+
 </div>
