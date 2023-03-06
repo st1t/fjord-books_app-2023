@@ -6,5 +6,6 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  validates :avatar, attached: true, content_type: %w[image/jpg image/png image/gif]
+  validates :avatar, attached: true, content_type: %w[image/jpeg image/png image/gif],
+                     dimension: { width: 200, height: 200 }, size: { between: 1.kilobyte..1.megabytes }
 end
