@@ -4,6 +4,11 @@
   <%= render @report %>
 </div>
 
+<div class="show-comment">
+  <%= render 'comments/comment', commentable: @report %>
+</div>
+<%= render 'comments/form', commentable: @report, comment: @comment %>
+
 <div class="page-nav">
   <%= link_to t('views.common.edit', name: Report.model_name.human.downcase), edit_report_path(@report) %> |
   <%= link_to t('views.common.back', name: Report.model_name.human.downcase), reports_path %>

@@ -9,7 +9,9 @@ class BooksController < ApplicationController
   end
 
   # GET /books/1
-  def show; end
+  def show
+    @comment = Comment.new
+  end
 
   # GET /books/new
   def new

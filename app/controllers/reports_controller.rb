@@ -9,7 +9,9 @@ class ReportsController < ApplicationController
   end
 
   # GET /reports/1
-  def show; end
+  def show
+    @comment = Comment.new
+  end
 
   # GET /reports/new
   def new
