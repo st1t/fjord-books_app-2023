@@ -13,11 +13,12 @@
   <% end %>
 
   <%= form.hidden_field :author, value: current_user.name %>
+  <%= form.hidden_field :user_id, value: current_user.id %>
   <%= form.hidden_field :commentable_id, value: commentable.id %>
   <%= form.hidden_field :commentable_type, value: commentable.class %>
 
   <div>
-    <%= form.text_area :body %>
+    <%= form.text_area :body, required: true %>
   </div>
 
   <div>
