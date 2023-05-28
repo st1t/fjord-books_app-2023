@@ -46,7 +46,7 @@ class CommentsController < ApplicationController
       @comment.destroy
       redirect_to comments_url, notice: t('controllers.common.notice_destroy', name: Comment.model_name.human)
     else
-      redirect_to comments_url, alert: t('controllers.comments.error_not_owner')
+      redirect_to comments_url, alert: t('controllers.common.error_not_owner_destroy', name: Comment.model_name.human)
     end
   end
 
