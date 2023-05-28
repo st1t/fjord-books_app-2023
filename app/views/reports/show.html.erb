@@ -4,9 +4,11 @@
   <%= render @report %>
 </div>
 
+<h1><%= t('views.common.title_index', name: Comment.model_name.human) %></h1>
 <div class="show-comment">
   <%= render 'comments/comment', commentable: @report %>
 </div>
+<h1><%= t('views.common.title_new', name: Comment.model_name.human) %></h1>
 <%= render 'comments/form', commentable: @report, comment: @comment %>
 
 <div class="page-nav">
