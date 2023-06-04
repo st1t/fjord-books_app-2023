@@ -34,7 +34,8 @@ class ReportsController < ApplicationController
 
   # PATCH/PUT /reports/1
   def update
-    if @report.user == current_user
+    set_my_report
+    if @report
       if @report.update(report_params)
         redirect_to report_url(@report), notice: t('controllers.common.notice_update', name: Report.model_name.human)
       else
@@ -47,7 +48,8 @@ class ReportsController < ApplicationController
 
   # DELETE /reports/1
   def destroy
-    if @report.user == current_user
+    set_my_report
+    if @report
       @report.destroy
       redirect_to reports_url, notice: t('controllers.common.notice_destroy', name: Report.model_name.human)
     else
@@ -60,6 +62,10 @@ class ReportsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_report
     @report = Report.find(params[:id])
+  end
+
+  def set_my_report
+    @report = current_user.reports.find_by(id: params[:id])
   end
 
   # Only allow a list of trusted parameters through.
