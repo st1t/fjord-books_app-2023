@@ -2,23 +2,10 @@
 
 class CommentsController < ApplicationController
   before_action :set_comment, only: %i[destroy]
-  # GET /comments
-  # def index
-  #   @comments = Comment.order(:id).page(params[:page])
-  # end
-
-  # # GET /comments/1
-  # def show
-  #   @comment = Comment.new
-  # end
-
-  # # GET /comments/new
+  # GET /comments/new
   def new
     @comment = Comment.new
   end
-
-  # # GET /comments/1/edit
-  # def edit; end
 
   # POST /comments
   def create
@@ -30,15 +17,6 @@ class CommentsController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
-
-  # PATCH/PUT /comments/1
-  # def update
-  #   if @comment.update(comment_params)
-  #     redirect_to comment_url(@comment), notice: t('controllers.common.notice_update', name: Comment.model_name.human)
-  #   else
-  #     render :edit, status: :unprocessable_entity
-  #   end
-  # end
 
   # DELETE /comments/1
   def destroy
