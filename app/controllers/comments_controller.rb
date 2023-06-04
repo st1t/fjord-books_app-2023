@@ -20,7 +20,9 @@ class CommentsController < ApplicationController
 
   # DELETE /comments/1
   def destroy
-    if @comment.user == current_user
+    @comment = current_user.comments.find_by(id: params[:id])
+
+    if @comment
       @comment.destroy
       redirect_to comments_url, notice: t('controllers.common.notice_destroy', name: Comment.model_name.human)
     else
