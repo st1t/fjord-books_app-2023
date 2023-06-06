@@ -34,26 +34,24 @@ class ReportsController < ApplicationController
 
   # PATCH/PUT /reports/1
   def update
-    set_my_report
-    if @report
-      if @report.update(report_params)
-        redirect_to report_url(@report), notice: t('controllers.common.notice_update', name: Report.model_name.human)
-      else
-        render :edit, status: :unprocessable_entity
-      end
-    else
+    @report = my_report
+    if @report.nil?
       redirect_to reports_url, alert: t('controllers.common.error_not_owner_update', name: Report.model_name.human)
+    elsif @report.update(report_params)
+      redirect_to report_url(@report), notice: t('controllers.common.notice_update', name: Report.model_name.human)
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
   # DELETE /reports/1
   def destroy
-    set_my_report
-    if @report
+    @report = my_report
+    if @report.nil?
+      redirect_to reports_url, alert: t('controllers.common.error_not_owner_destroy', name: Report.model_name.human)
+    else
       @report.destroy
       redirect_to reports_url, notice: t('controllers.common.notice_destroy', name: Report.model_name.human)
-    else
-      redirect_to reports_url, alert: t('controllers.common.error_not_owner_destroy', name: Report.model_name.human)
     end
   end
 
@@ -64,8 +62,10 @@ class ReportsController < ApplicationController
     @report = Report.find(params[:id])
   end
 
-  def set_my_report
-    @report = current_user.reports.find_by(id: params[:id])
+  def my_report
+    current_user.reports.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    nil
   end
 
   # Only allow a list of trusted parameters through.
