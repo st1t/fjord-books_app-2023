@@ -34,10 +34,8 @@ class ReportsController < ApplicationController
 
   # PATCH/PUT /reports/1
   def update
-    @report = my_report
-    if @report.nil?
-      redirect_to reports_url, alert: t('controllers.common.error_not_owner_update', name: Report.model_name.human)
-    elsif @report.update(report_params)
+    @report = current_user.reports.find(params[:id])
+    if @report.update(report_params)
       redirect_to report_url(@report), notice: t('controllers.common.notice_update', name: Report.model_name.human)
     else
       render :edit, status: :unprocessable_entity
@@ -46,13 +44,9 @@ class ReportsController < ApplicationController
 
   # DELETE /reports/1
   def destroy
-    @report = my_report
-    if @report.nil?
-      redirect_to reports_url, alert: t('controllers.common.error_not_owner_destroy', name: Report.model_name.human)
-    else
-      @report.destroy
-      redirect_to reports_url, notice: t('controllers.common.notice_destroy', name: Report.model_name.human)
-    end
+    @report = current_user.reports.find(params[:id])
+    @report.destroy
+    redirect_to reports_url, notice: t('controllers.common.notice_destroy', name: Report.model_name.human)
   end
 
   private
@@ -60,12 +54,6 @@ class ReportsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_report
     @report = Report.find(params[:id])
-  end
-
-  def my_report
-    current_user.reports.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    nil
   end
 
   # Only allow a list of trusted parameters through.

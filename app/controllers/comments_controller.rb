@@ -18,8 +18,6 @@ class CommentsController < ApplicationController
     @comment = current_user.comments.find(params[:id])
     @comment.destroy
     redirect_to comments_url, notice: t('controllers.common.notice_destroy', name: Comment.model_name.human)
-  rescue ActiveRecord::RecordNotFound
-    redirect_to comments_url, alert: t('controllers.common.error_not_owner_destroy', name: Comment.model_name.human)
   end
 
   private

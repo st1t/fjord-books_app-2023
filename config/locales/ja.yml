@@ -207,8 +207,6 @@ ja:
       notice_create: "%{name}が作成されました。"
       notice_update: "%{name}が更新されました。"
       notice_destroy: "%{name}が削除されました。"
-      error_not_owner_update: "他人が作成した%{name}は編集できません。"
-      error_not_owner_destroy: "他人が作成した%{name}は削除できません。"
   layouts:
     application:
       menu: メニュー
