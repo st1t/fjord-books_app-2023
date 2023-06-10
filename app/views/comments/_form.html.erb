@@ -1,0 +1,14 @@
+<%= form_with(model: comment) do |form| %>
+  <%= render 'shared/validation_error', commentable: comment %>
+
+  <%= form.hidden_field :commentable_id, value: commentable.id %>
+  <%= form.hidden_field :commentable_type, value: commentable.class %>
+
+  <div>
+    <%= form.text_area :body, required: true %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
