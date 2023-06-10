@@ -9,7 +9,9 @@
         <p>
           <%= comment.body %>
         </p>
-        <%= button_to t('views.common.destroy', name: Comment.model_name.human.downcase), comment, method: :delete %>
+        <% if comment.user == current_user %>
+          <%= button_to t('views.common.destroy', name: Comment.model_name.human.downcase), comment, method: :delete %>
+        <% end %>
       </div>
     <% end %>
   </div>
