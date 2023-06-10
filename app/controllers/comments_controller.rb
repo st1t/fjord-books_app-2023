@@ -2,9 +2,6 @@
 
 class CommentsController < ApplicationController
   before_action :set_comment, only: %i[destroy]
-  # GET /comments/new
-  def new; end
-
   # POST /comments
   def create
     @comment = Comment.new(comment_params)
