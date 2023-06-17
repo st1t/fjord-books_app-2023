@@ -5,6 +5,8 @@ class Report < ApplicationRecord
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :report_mentioning_reports, dependent: :destroy
   has_many :mentioning_reports, through: :report_mentioning_reports
+  has_many :report_mentioned_reports, dependent: :destroy
+  has_many :mentioned_reports, through: :report_mentioned_reports
 
   validates :title, presence: true
   validates :content, presence: true
