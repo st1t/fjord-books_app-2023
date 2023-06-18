@@ -22,6 +22,16 @@ class ReportsController < ApplicationController
     @report = current_user.reports.new(report_params)
 
     if @report.save
+      report_id = Report.order(created_at: :desc)
+                        .where(user_id: current_user.id)
+                        .limit(1)
+                        .pick(:id)
+
+      mentioning_report_ids = mentioning_report_ids(@report.content)
+      mentioning_report_ids.each do |id|
+        MentioningReport.new(report_id:, mentioning_report_id: id)
+                        .save
+      end
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
     else
       render :new, status: :unprocessable_entity
@@ -50,5 +60,14 @@ class ReportsController < ApplicationController
 
   def report_params
     params.require(:report).permit(:title, :content)
+  end
+
+  def mentioning_report_ids(report)
+    report_ids = []
+    regexp = URI::DEFAULT_PARSER.make_regexp(['http://localhost'])
+    report.to_enum(:scan, regexp).map { Regexp.last_match }.each do |match|
+      report_ids << match[7].gsub(%r{/reports/}, '').to_i
+    end
+    report_ids
   end
 end
