@@ -20,20 +20,18 @@ class ReportsController < ApplicationController
 
   def create
     @report = current_user.reports.new(report_params)
-
-    if @report.save
+    ActiveRecord::Base.transaction do
+      @report.save!
       mentioning_report_ids = mentioning_report_ids(@report.content)
       mentioning_report_ids.each do |id|
-        mentioning_report = MentioningReport.new(report_id: @report.id, mentioning_report_id: id)
-        mentioning_report.save
+        mentioning_report = MentioningReport.create!(report_id: @report.id, mentioning_report_id: id)
         @report.mentioning_reports << mentioning_report
 
-        mentioned_report = MentionedReport.new(report_id: id, mentioned_report_id: @report.id)
-        mentioning_report.save
+        mentioned_report = MentionedReport.create!(report_id: id, mentioned_report_id: @report.id)
         @report.mentioned_reports << mentioned_report
       end
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
-    else
+    rescue StandardError
       render :new, status: :unprocessable_entity
     end
   end
