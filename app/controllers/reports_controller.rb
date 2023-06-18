@@ -22,15 +22,15 @@ class ReportsController < ApplicationController
     @report = current_user.reports.new(report_params)
 
     if @report.save
-      report_id = Report.order(created_at: :desc)
-                        .where(user_id: current_user.id)
-                        .limit(1)
-                        .pick(:id)
-
       mentioning_report_ids = mentioning_report_ids(@report.content)
       mentioning_report_ids.each do |id|
-        MentioningReport.new(report_id:, mentioning_report_id: id)
-                        .save
+        mentioning_report = MentioningReport.new(report_id: @report.id, mentioning_report_id: id)
+        mentioning_report.save
+        @report.mentioning_reports << mentioning_report
+
+        mentioned_report = MentionedReport.new(report_id: id, mentioned_report_id: @report.id)
+        mentioning_report.save
+        @report.mentioned_reports << mentioned_report
       end
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
     else
