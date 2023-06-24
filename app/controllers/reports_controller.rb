@@ -9,6 +9,14 @@ class ReportsController < ApplicationController
 
   def show
     @report = Report.find(params[:id])
+
+    @mentioned_reports = []
+    @report.mentioned_reports.each do |mentioned_report|
+      user_name = Report.find(mentioned_report.mentioner_report_id).user.name
+      title = "#{Report.find(mentioned_report.mentioner_report_id).title} by #{user_name}"
+      path = report_path(mentioned_report.mentioner_report_id)
+      @mentioned_reports << { title:, path: }
+    end
   end
 
   # GET /reports/new
@@ -67,11 +75,12 @@ class ReportsController < ApplicationController
   def mention_save!
     mentioning_report_ids = mentioning_report_ids(@report.content)
     mentioning_report_ids.each do |id|
-      mentioning_report = MentioningReport.create!(report_id: @report.id, mentioning_report_id: id)
+      mentioning_report = MentioningReport.create!(mentioner_report_id: @report.id, mentionee_report_id: id)
       @report.mentioning_reports << mentioning_report
 
-      mentioned_report = MentionedReport.create!(report_id: id, mentioned_report_id: @report.id)
-      @report.mentioned_reports << mentioned_report
+      mentioned_report = MentionedReport.create!(mentioner_report_id: @report.id, mentionee_report_id: id)
+      report = Report.find(id)
+      report.mentioned_reports << mentioned_report
     end
   end
 end
