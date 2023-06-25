@@ -30,7 +30,7 @@ class ReportsController < ApplicationController
     @report = current_user.reports.new(report_params)
     ActiveRecord::Base.transaction do
       @report.save!
-      mention_save!
+      mention_create!
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
     rescue StandardError
       render :new, status: :unprocessable_entity
@@ -40,7 +40,8 @@ class ReportsController < ApplicationController
   def update
     ActiveRecord::Base.transaction do
       @report.update!(report_params)
-      mention_save!
+      @report.mentioned_reports.delete_all
+      mention_update!
       redirect_to @report, notice: t('controllers.common.notice_update', name: Report.model_name.human)
     rescue StandardError
       render :edit, status: :unprocessable_entity
@@ -72,7 +73,7 @@ class ReportsController < ApplicationController
     report_ids
   end
 
-  def mention_save!
+  def mention_create!
     mentioning_report_ids = mentioning_report_ids(@report.content)
     mentioning_report_ids.each do |id|
       mentioning_report = MentioningReport.create!(mentioner_report_id: @report.id, mentionee_report_id: id)
@@ -81,6 +82,18 @@ class ReportsController < ApplicationController
       mentioned_report = MentionedReport.create!(mentioner_report_id: @report.id, mentionee_report_id: id)
       report = Report.find(id)
       report.mentioned_reports << mentioned_report
+    end
+  end
+
+  def mention_update!
+    mentioning_report_ids = mentioning_report_ids(@report.content)
+    mentioning_report_ids.each do |id|
+      mentioning_report = MentioningReport.find_or_create_by!(mentioner_report_id: @report.id, mentionee_report_id: id)
+      @report.mentioning_reports << mentioning_report unless @report.mentioning_reports.exists?(mentioning_report.id)
+
+      report = Report.find(id)
+      mentioned_report = MentionedReport.find_or_create_by!(mentioner_report_id: @report.id, mentionee_report_id: id)
+      report.mentioned_reports << mentioned_report unless report.mentioned_reports.exists?(mentioned_report.id)
     end
   end
 end
