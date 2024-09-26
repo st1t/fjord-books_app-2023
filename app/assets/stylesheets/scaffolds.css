@@ -260,6 +260,18 @@ Show
   object-fit: contain;
 }
 
+.show-mention {
+  max-width: var(--single-column-w);
+  display: block;
+  border: solid var(--global-bw) var(--global-bc);
+  padding: 24px;
+  border-radius: var(--global-br);
+  font-size: var(--global-fz-md);
+  line-height: var(--global-lh);
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 /****************
 New and Edit
 ****************/

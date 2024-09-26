@@ -14,4 +14,5 @@ Rails.application.routes.draw do
   end
   resources :comments, only: :destroy
   resources :users, only: %i(index show)
+  resources :mentioning_reports, only: %i(create destroy)
 end

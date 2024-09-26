@@ -4,6 +4,12 @@
   <%= render @report %>
 </div>
 
+<% if @mentioned_reports.length > 0 %>
+  <div class="show-mention">
+    <%= render 'reports/mention' %>
+  </div>
+<% end %>
+
 <%= render 'shared/comments', commentable: @report %>
 
 <nav class="page-nav">

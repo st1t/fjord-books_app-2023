@@ -1,0 +1,5 @@
+この日報は以下の日報からリンクされています<br>
+<% @mentioned_reports.each do |mentioned_report| %>
+  <%= link_to mentioned_report[:title], mentioned_report[:path] %>
+  <br>
+<% end %>
